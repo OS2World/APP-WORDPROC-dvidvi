@@ -1,0 +1,24 @@
+# makefile for MSC 6.00A under OS/2. 
+#  dvidvi.exe  	OS/2 executable
+#  dvidvbnd.exe 	MSDOS and OS/2 bound executable
+# Darrel Hankerson hank@ducvax.auburn.edu, 29-Aug-92
+
+CC = cl
+MODEL = S
+CFLAGS = -DMSDOS -A$(MODEL) -W3
+LINK = cl
+LFLAGS = -Lp -A$(MODEL)
+BIND = bind
+
+OBJS = dvidvi.obj 
+
+dvidvi.exe: $(OBJS) dvidvi.def
+	$(LINK) $(LFLAGS) $(OBJS) dvidvi.def
+
+dvidvbnd.exe : dvidvi.exe
+	$(BIND) $< /o $@
+
+all : dvidvi.exe dvidvbnd.exe
+
+
+.c.obj :; $(CC) -c $(CFLAGS) $*.c

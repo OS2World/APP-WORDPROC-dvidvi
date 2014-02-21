@@ -1,0 +1,50 @@
+*** dvidvi.c	Wed Apr 29 03:29:22 1992
+--- ../dvidvi.c	Sat Aug 29 14:10:02 1992
+***************
+*** 34,39 ****
+--- 34,45 ----
+  #ifndef VMS
+  #include <stdio.h>
+  #include <string.h>
++ #ifdef MSDOS
++ #include <stdlib.h>
++ #include <fcntl.h> 			/* for setmode() */
++ #include <io.h>
++ #include "prototyp.h"
++ #endif
+  #else /* VMS */
+  #include "sys$library:stdio.h"       /* AKT: added sys$library: */
+  #include <alloc.h>
+***************
+*** 572,580 ****
+  	       p++; firsttransf = 1 ;
+  	       }
+  #ifdef SHORTINT
+-             if(sscanf(p, "%d", &firstpage)==0)
+- #else   /* ~SHORTINT */
+              if(sscanf(p, "%ld", &firstpage)==0)
+  #endif  /* ~SHORTINT */
+  	       error("! Bad first page option (-f).") ;
+              break ;
+--- 578,586 ----
+  	       p++; firsttransf = 1 ;
+  	       }
+  #ifdef SHORTINT
+              if(sscanf(p, "%ld", &firstpage)==0)
++ #else   /* ~SHORTINT */
++             if(sscanf(p, "%d", &firstpage)==0)
+  #endif  /* ~SHORTINT */
+  	       error("! Bad first page option (-f).") ;
+              break ;
+***************
+*** 796,801 ****
+--- 802,810 ----
+         (void)fprintf(stderr, "%s -> %s\n",iname,oname);
+         temp = nextstring ;
+     }
++ #ifdef MSDOS
++ 	setmode(fileno(stdout), O_BINARY);
++ #endif
+  }
+  /*
+   *   Grabs a pointer, and checks it for validity.
